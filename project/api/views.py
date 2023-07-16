@@ -14,7 +14,10 @@ from api.serializers import (
 )
 
 
-class MyView(APIView):
+class ImportView(APIView):
+    def get(self, request):
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
     def post(self, request, *args, **kwargs):
         try:
             for i in request.data:

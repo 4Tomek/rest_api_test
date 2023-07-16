@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import MyView
+from .views import ImportView
 
 
-urlpatterns = [path("import/", MyView.as_view())]
+urlpatterns = [path("import/", ImportView.as_view())]
