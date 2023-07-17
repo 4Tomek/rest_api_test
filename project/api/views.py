@@ -63,7 +63,6 @@ class ImportView(APIView):
 
 class DetailModelView(APIView):
     def get(self, request, model_name):
-        print(request, model_name)
         if model_name == "attributename":
             models = AttributeName.objects.all()
             serializer = AttributeNameSerializer(models, many=True)
@@ -97,43 +96,96 @@ class DetailModelView(APIView):
             serializer = CatalogSerializer(models, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"res": "Model with this name does not exist"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class DetailObjectView(APIView):
     def get(self, request, model_name, id):
-        print(request, model_name)
         if model_name == "attributename":
-            object = AttributeName.objects.get(id=id)
-            serializer = AttributeNameSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = AttributeName.objects.get(id=id)
+                serializer = AttributeNameSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "attributevalue":
-            object = AttributeValue.objects.get(id=id)
-            serializer = AttributeValueSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = AttributeValue.objects.get(id=id)
+                serializer = AttributeValueSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "attribute":
-            object = Attribute.objects.get(id=id)
-            serializer = AttributeSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = Attribute.objects.get(id=id)
+                serializer = AttributeSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "product":
-            object = Product.objects.get(id=id)
-            serializer = ProductSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = Product.objects.get(id=id)
+                serializer = ProductSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "productattributes":
-            object = ProductAttributes.objects.get(id=id)
-            serializer = ProductAttributesSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = ProductAttributes.objects.get(id=id)
+                serializer = ProductAttributesSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "image":
-            object = Image.objects.get(id=id)
-            serializer = ImageSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = Image.objects.get(id=id)
+                serializer = ImageSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "productimage":
-            object = ProductImage.objects.get(id=id)
-            serializer = ProductImageSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = ProductImage.objects.get(id=id)
+                serializer = ProductImageSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif model_name == "catalog":
-            object = Catalog.objects.get(id=id)
-            serializer = CatalogSerializer(object, many=False)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            try:
+                object = Catalog.objects.get(id=id)
+                serializer = CatalogSerializer(object, many=False)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response(
+                    {"res": "Object with this id does not exist"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"res": "Model with this name does not exist"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
