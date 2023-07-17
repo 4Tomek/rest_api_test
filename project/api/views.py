@@ -53,8 +53,20 @@ class ImportView(APIView):
                     serializer = CatalogSerializer(data=parameters)
                     if serializer.is_valid():
                         serializer.save()
-                else:
-                    pass
+
+                    for i in parameters["products_ids"]:
+                        serializer = CatalogProductSerializer(
+                            data={"product": i, "catalog": parameters["id"]}
+                        )
+                        if serializer.is_valid():
+                            serializer.save()
+
+                    for i in parameters["atributes_ids"]:
+                        serializer = CatalogAttributeSerializer(
+                            data={"attribute": i, "catalog": parameters["id"]}
+                        )
+                        if serializer.is_valid():
+                            serializer.save()
 
             return Response({}, status=status.HTTP_200_OK)
         except:

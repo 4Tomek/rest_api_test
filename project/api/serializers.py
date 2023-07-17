@@ -1,16 +1,5 @@
 from rest_framework import serializers
-
-
-from api.models import (
-    AttributeName,
-    AttributeValue,
-    Attribute,
-    Product,
-    ProductAttributes,
-    Image,
-    ProductImage,
-    Catalog,
-)
+from api.models import *
 
 
 class AttributeNameSerializer(serializers.ModelSerializer):
@@ -61,4 +50,16 @@ class CatalogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Catalog
+        fields = "__all__"
+
+
+class CatalogProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CatalogProduct
+        fields = "__all__"
+
+
+class CatalogAttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CatalogAttribute
         fields = "__all__"

@@ -66,5 +66,16 @@ class Catalog(models.Model):
     obrazek_id = models.ForeignKey(
         Image, on_delete=models.DO_NOTHING, blank=True, null=True
     )
-    products_ids = models.ManyToManyField(Product)
-    atributes_ids = models.ManyToManyField(Attribute)
+
+    products_ids = models.ManyToManyField(Product, through="CatalogProduct")
+    atributes_ids = models.ManyToManyField(Attribute, through="CatalogAttribute")
+
+
+class CatalogProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    catalog = models.ForeignKey(Catalog, on_delete=models.DO_NOTHING)
+
+
+class CatalogAttribute(models.Model):
+    attribute = models.ForeignKey(Attribute, on_delete=models.DO_NOTHING)
+    catalog = models.ForeignKey(Catalog, on_delete=models.DO_NOTHING)
