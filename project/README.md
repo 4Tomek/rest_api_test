@@ -1,4 +1,4 @@
-**This project creates models based on JSON input.**
+**This project imports data from JSON input.**
 **It is also able to return JSON representation of models stored in database.**
 **It uses Django and Django Rest Framework.**
 
