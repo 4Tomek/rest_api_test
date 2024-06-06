@@ -5,6 +5,8 @@ from rest_framework import status
 from api.serializers import *
 from api.models import *
 
+from django.apps import apps
+
 class ImportView(APIView):
     def get(self, request):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -38,44 +40,16 @@ class ImportView(APIView):
 
 class DetailModelView(APIView):
     def get(self, request, model_name):
-        print("MODEL NAME", model_name, ProductAttributes)
-        if model_name.lower() == "attributename":
-            models = AttributeName.objects.all()
-            serializer = AttributeNameSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "attributevalue":
-            models = AttributeValue.objects.all()
-            serializer = AttributeValueSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "attribute":
-            models = Attribute.objects.all()
-            serializer = AttributeSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "product" or "Product":
-            models = Product.objects.all()
-            serializer = ProductSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "productattributes":
-            models = ProductAttributes.objects.all()
-            serializer = ProductAttributesSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "image":
-            models = Image.objects.all()
-            serializer = ImageSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "productimage":
-            models = ProductImage.objects.all()
-            serializer = ProductImageSerializer(models, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif model_name.lower() == "catalog":
-            models = Catalog.objects.all()
-            serializer = CatalogSerializer(models, many=True)
+        model_name = model_name.lower()
+        model_class = apps.get_model('api', model_name.capitalize())
+        serializer_class = globals()[f"{model_name.capitalize()}Serializer"]
+
+        if model_class and serializer_class:
+            instances = model_class.objects.all()
+            serializer = serializer_class(instances, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(
-            {"res": "Model with this name does not exist"},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response({"res": "Model with this name does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DetailObjectView(APIView):
