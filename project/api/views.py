@@ -5,72 +5,35 @@ from rest_framework import status
 from api.serializers import *
 from api.models import *
 
-
 class ImportView(APIView):
     def get(self, request):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, *args, **kwargs):
+        serializers = {
+            "AttributeName": AttributeNameSerializer,
+            "AttributeValue": AttributeValueSerializer,
+            "Attribute": AttributeSerializer,
+            "Product": ProductSerializer,
+            "ProductAttributes": ProductAttributesSerializer,
+            "Image": ImageSerializer,
+            "ProductImage": ProductImageSerializer,
+            "Catalog": CatalogSerializer,
+            "CatalogProduct": CatalogProductSerializer,
+            "CatalogAttribute": CatalogAttributeSerializer,
+        }
+
         try:
-            for i in request.data:
-                if "AttributeName" in i.keys():
-                    parameters = i["AttributeName"]
-                    serializer = AttributeNameSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "AttributeValue" in i.keys():
-                    parameters = i["AttributeValue"]
-                    serializer = AttributeValueSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "Attribute" in i.keys():
-                    parameters = i["Attribute"]
-                    serializer = AttributeSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "Product" in i.keys():
-                    parameters = i["Product"]
-                    serializer = ProductSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "ProductAttributes" in i.keys():
-                    parameters = i["ProductAttributes"]
-                    serializer = ProductAttributesSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "Image" in i.keys():
-                    parameters = i["Image"]
-                    serializer = ImageSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "ProductImage" in i.keys():
-                    parameters = i["ProductImage"]
-                    serializer = ProductImageSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-                elif "Catalog" in i.keys():
-                    parameters = i["Catalog"]
-                    serializer = CatalogSerializer(data=parameters)
-                    if serializer.is_valid():
-                        serializer.save()
-
-                    for i in parameters["products_ids"]:
-                        serializer = CatalogProductSerializer(
-                            data={"product": i, "catalog": parameters["id"]}
-                        )
+            for item in request.data:
+                for key, serializer_class in serializers.items():
+                    if key in item:
+                        serializer = serializer_class(data=item[key])
                         if serializer.is_valid():
                             serializer.save()
-
-                    for i in parameters["atributes_ids"]:
-                        serializer = CatalogAttributeSerializer(
-                            data={"attribute": i, "catalog": parameters["id"]}
-                        )
-                        if serializer.is_valid():
-                            serializer.save()
-
+                        break
             return Response({}, status=status.HTTP_200_OK)
-        except:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DetailModelView(APIView):
